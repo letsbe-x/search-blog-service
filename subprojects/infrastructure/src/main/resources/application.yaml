@@ -1,0 +1,5 @@
+kakao:
+    rest-api:
+      blog:
+        baseurl: https://dapi.kakao.com/v2/search/blog
+        token: ${KAKAO_REST_API_TOKEN}

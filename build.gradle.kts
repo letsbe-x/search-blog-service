@@ -36,6 +36,7 @@ subprojects {
 
     dependencies {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("org.apache.logging.log4j:log4j-core")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 

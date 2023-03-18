@@ -1,0 +1,5 @@
+### 블로그 검색
+GET {{ host }}/search/blog
+Content-Type: application/x-www-form-urlencoded
+
+query="백종원 요리"

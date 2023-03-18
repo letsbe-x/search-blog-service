@@ -1,0 +1,17 @@
+# ref: https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide
+### 카카오 블로그 검색 API
+GET https://dapi.kakao.com/v2/search/blog
+Authorization: KakaoAK {{ KAKAO_REST_API_KEY }}
+Content-Type: application/x-www-form-urlencoded
+
+query="백종원 요리"
+
+### 카카오 블로그 검색 API - parameter
+GET https://dapi.kakao.com/v2/search/blog
+Authorization: KakaoAK {{ KAKAO_REST_API_KEY }}
+Content-Type: application/x-www-form-urlencoded
+
+query="백종원 요리"
+sort="accuracy"
+page=2
+size=30
