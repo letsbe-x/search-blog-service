@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-@ConfigurationPropertiesScan("com.letsbe.blog.search.interfaces.configuration")
+@ConfigurationPropertiesScan("com.letsbe.blog.interfaces.configuration")
 class ServerApplication
 
 fun main(args: Array<String>) {
