@@ -1,11 +1,23 @@
 package com.letsbe.search.blog.infrastructure.external.kakao
 
+import com.letsbe.search.blog.domain.dto.SearchBlogResultDto
 import java.time.ZonedDateTime
 
 data class KakaoSearchBlogResponse(
     val meta: KakaoSearchBlogMeta,
     val documents: List<KakaoBlogDocument> = listOf()
-)
+) {
+    fun toSearchBlogResultDtoList(): List<SearchBlogResultDto> {
+        return this.documents.map {
+            SearchBlogResultDto(
+                title = it.title,
+                contents = it.contents,
+                url = it.url,
+                datetime = it.datetime
+            )
+        }
+    }
+}
 
 data class KakaoSearchBlogMeta(
     val is_end: Boolean,

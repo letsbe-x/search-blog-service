@@ -1,6 +1,6 @@
-package com.letsbe.search.blog.applications.service
+package com.letsbe.search.blog.applications.service.dto
 
-import com.letsbe.search.blog.applications.blog.BlogPostDO
+import com.letsbe.search.blog.applications.dto.BlogPostDto
 import com.letsbe.search.blog.infrastructure.external.SearchBlogClient
 import org.springframework.stereotype.Service
 
@@ -10,10 +10,10 @@ class SearchBlogService(
 ) {
     val logger = org.slf4j.LoggerFactory.getLogger(this::class.java)
 
-    suspend fun searchBlog(keyword: String): List<BlogPostDO> {
+    suspend fun searchBlog(keyword: String): List<BlogPostDto> {
         val response = searchBlogClient.searchBlog(keyword)
 
         logger.info("response: {}", response)
-        return response.map { BlogPostDO.from(it) }
+        return response.map { BlogPostDto.from(it) }
     }
 }
