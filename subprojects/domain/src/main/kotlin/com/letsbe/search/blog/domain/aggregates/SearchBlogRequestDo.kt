@@ -1,25 +1,26 @@
 package com.letsbe.search.blog.domain.aggregates
 
+import com.letsbe.search.blog.domain.dto.SearchBlogRequestDto
 import com.letsbe.search.blog.domain.vo.SearchSortBySpec
 data class SearchBlogRequestDo(
     val query: String,
-    val sort: SearchSortBySpec = SearchSortBySpec.ACCURACY,
-    val page: Int,
-    val size: Int
+    val sort: String,
+    val page: Int = 1,
+    val size: Int = 10
 ) {
-    companion object {
-        fun from(query: String, sort: String, page: Int, size: Int): SearchBlogRequestDo {
-            return SearchBlogRequestDo(
-                query = query,
-                sort = SearchSortBySpec.values().firstOrNull { it.alias == sort } ?: SearchSortBySpec.UNRECOGNIZED,
-                page = page,
-                size = size
-            ).validate()
-        }
+    fun toDto(): SearchBlogRequestDto {
+        val sort = SearchSortBySpec.values().firstOrNull { it.alias == sort } ?: SearchSortBySpec.UNRECOGNIZED
+
+        return SearchBlogRequestDto(
+            query = query,
+            sort = sort,
+            page = page,
+            size = size
+        ).validate()
     }
 
     // TODO : 좀더 좋은 validate를 선언 할 수 있을 것 같은데
-    fun validate(): SearchBlogRequestDo {
+    private fun SearchBlogRequestDto.validate(): SearchBlogRequestDto {
         if (query.isBlank()) {
             throw IllegalArgumentException("query is blank")
         } else if (sort == SearchSortBySpec.UNRECOGNIZED) {

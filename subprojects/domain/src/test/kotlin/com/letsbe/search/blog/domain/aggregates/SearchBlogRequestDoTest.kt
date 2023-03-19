@@ -9,15 +9,15 @@ internal class SearchBlogRequestDoTest {
     @Test
     fun validate() {
         assertDoesNotThrow {
-            SearchBlogRequestDo.from("query", "accuracy")
+            SearchBlogRequestDo("query", "accuracy")
         }
 
         assertThrows<IllegalArgumentException> {
-            SearchBlogRequestDo.from("query", "unrecognized")
+            SearchBlogRequestDo("query", "unrecognized")
         }
 
         assertThrows<IllegalArgumentException> {
-            SearchBlogRequestDo.from("", "recency")
+            SearchBlogRequestDo("", "recency")
         }
     }
 }

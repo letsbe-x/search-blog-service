@@ -13,8 +13,8 @@ class SearchBlogService(
     val logger: Logger = org.slf4j.LoggerFactory.getLogger(this::class.java)
 
     suspend fun searchBlog(keyword: String, sort: String, page: Int, size: Int): List<BlogPostDto> {
-        val request = SearchBlogRequestDo.from(keyword, sort, page, size)
-        val response = searchBlogClient.searchBlog(request).result()
+        val request = SearchBlogRequestDo(keyword, sort, page, size).toDto()
+        val response = searchBlogClient.searchBlog(request).toDtoList()
 
         logger.info("response: {}", response)
         return response.map { BlogPostDto.from(it) }

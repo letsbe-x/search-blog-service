@@ -29,7 +29,7 @@ internal class SearchBlogResultListDoTest {
                     datetime = ZonedDateTime.parse("2025-01-01T00:00:00.000+09:00")
                 )
             )
-        ).result()
+        ).toDtoList()
 
         assertThat(result).hasSize(3)
         assertThat(result.zipWithNext().all { it.first.datetime >= it.second.datetime }).isTrue

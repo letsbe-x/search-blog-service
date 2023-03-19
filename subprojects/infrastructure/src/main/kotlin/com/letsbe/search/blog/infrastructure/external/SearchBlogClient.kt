@@ -1,7 +1,7 @@
 package com.letsbe.search.blog.infrastructure.external
 
-import com.letsbe.search.blog.domain.aggregates.SearchBlogRequestDo
 import com.letsbe.search.blog.domain.aggregates.SearchBlogResultListDo
+import com.letsbe.search.blog.domain.dto.SearchBlogRequestDto
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogClient
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogRequest
 import kotlinx.coroutines.reactive.awaitSingle
@@ -15,7 +15,7 @@ class SearchBlogClient(
 ) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    suspend fun searchBlog(request: SearchBlogRequestDo): SearchBlogResultListDo {
+    suspend fun searchBlog(request: SearchBlogRequestDto): SearchBlogResultListDo {
         val response = kakaoSearchBlogClient.search(
             KakaoSearchBlogRequest(
                 query = request.query,

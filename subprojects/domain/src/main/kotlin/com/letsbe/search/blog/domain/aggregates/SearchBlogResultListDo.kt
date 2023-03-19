@@ -5,7 +5,7 @@ import com.letsbe.search.blog.domain.dto.SearchBlogResultDto
 class SearchBlogResultListDo(
     private val result: List<SearchBlogResultDto>
 ) {
-    fun result(): List<SearchBlogResultDto> {
+    fun toDtoList(): List<SearchBlogResultDto> {
         return this.orderbyNewest().result
     }
 
