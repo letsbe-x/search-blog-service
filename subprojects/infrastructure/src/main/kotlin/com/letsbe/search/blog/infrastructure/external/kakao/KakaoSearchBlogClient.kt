@@ -1,4 +1,4 @@
-package com.letsbe.search.blog.infrastructure.external
+package com.letsbe.search.blog.infrastructure.external.kakao
 
 import com.letsbe.search.blog.infrastructure.configuration.KakaoSearchBlogProperties
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -42,38 +42,3 @@ class KakaoSearchBlogClient(
             .bodyToMono()
     }
 }
-
-data class KakaoSearchBlogRequest(
-    val query: String,
-    val sort: String = "accuracy",
-    val page: Int = 1,
-    val size: Int = 10
-)
-
-data class KakaoSearchBlogResponse(
-    val meta: Map<String, Any>,
-    val documents: List<KakaoBlogDocument> = listOf()
-)
-
-data class KakaoBlogDocument(
-    val title: String,
-    val contents: String,
-    val url: String,
-    val datetime: String
-) {
-    fun toBlogPostDTO(): BlogPostDTO {
-        return BlogPostDTO(
-            title = this.title,
-            contents = this.contents,
-            url = this.url,
-            datetime = this.datetime
-        )
-    }
-}
-
-data class BlogPostDTO(
-    val title: String,
-    val contents: String,
-    val url: String,
-    val datetime: String
-)

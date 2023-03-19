@@ -1,12 +1,13 @@
 package com.letsbe.search.blog.applications.blog
 
-import com.letsbe.search.blog.infrastructure.external.BlogPostDTO
+import com.letsbe.search.blog.infrastructure.external.dto.BlogPostDTO
+import java.time.ZonedDateTime
 
 data class BlogPostDO(
     val title: String,
     val contents: String,
     val url: String,
-    val datetime: String
+    val datetime: ZonedDateTime
 ) {
     companion object {
         fun from(blogPostDTO: BlogPostDTO): BlogPostDO {

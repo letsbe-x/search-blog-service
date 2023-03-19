@@ -1,6 +1,6 @@
 package com.letsbe.search.blog.infrasturcture
 
-import com.letsbe.search.blog.infrastructure.external.KakaoSearchBlogClient
+import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogClient
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(

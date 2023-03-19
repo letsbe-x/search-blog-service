@@ -1,5 +1,8 @@
 package com.letsbe.search.blog.infrastructure.external
 
+import com.letsbe.search.blog.infrastructure.external.dto.BlogPostDTO
+import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogClient
+import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogRequest
 import kotlinx.coroutines.reactive.awaitSingle
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -15,10 +18,10 @@ class SearchBlogClient(
             KakaoSearchBlogRequest(
                 query = keyword
             )
-        )
+        ).awaitSingle()
 
-        logger.info("kakaoResponse: {}", response)
+        logger.debug("kakaoResponse: {}", response)
         // TODO: reactor를 사용하여 webflux답게 변경하는 방법을 생각해볼것
-        return response.awaitSingle()?.documents?.map { it.toBlogPostDTO() } ?: listOf()
+        return response?.documents?.map { BlogPostDTO.from(it) } ?: listOf()
     }
 }
