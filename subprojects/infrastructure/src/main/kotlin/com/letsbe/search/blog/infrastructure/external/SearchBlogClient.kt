@@ -5,6 +5,7 @@ import com.letsbe.search.blog.domain.aggregates.SearchBlogResultListDo
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogClient
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogRequest
 import kotlinx.coroutines.reactive.awaitSingle
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -12,13 +13,15 @@ import org.springframework.stereotype.Service
 class SearchBlogClient(
     private val kakaoSearchBlogClient: KakaoSearchBlogClient
 ) {
-    val logger = LoggerFactory.getLogger(this::class.java)
+    val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     suspend fun searchBlog(request: SearchBlogRequestDo): SearchBlogResultListDo {
         val response = kakaoSearchBlogClient.search(
             KakaoSearchBlogRequest(
                 query = request.query,
-                sort = request.sort.kakao
+                sort = request.sort.kakao,
+                page = request.page,
+                size = request.size
             )
         ).awaitSingle()
 

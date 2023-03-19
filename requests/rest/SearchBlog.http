@@ -10,3 +10,10 @@ GET {{ host }}/search/blog?
     query=윤하
     &sort=recency
 Content-Type: application/json
+
+### 블로그 검색 page/size 옵션
+GET {{ host }}/search/blog?
+    query=윤하
+    &page=2
+    &size=10
+Content-Type: application/json
