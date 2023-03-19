@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-data class KakaoSearchBlogProperties(
+data class KakaoBlogSearchProperties(
     // TODO: @value -> to ConfigurationProperties
     // TODO: Project Configuration
     @Value("\${kakao.rest-api.blog.baseurl}")

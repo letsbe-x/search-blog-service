@@ -1,6 +1,6 @@
 package com.letsbe.blog.search.infrasturcture
 
-import com.letsbe.blog.search.infrastructure.configuration.KakaoSearchBlogProperties
+import com.letsbe.blog.search.infrastructure.configuration.KakaoBlogSearchProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.Import
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import
 @ConfigurationPropertiesScan("com.letsbe.blog.search.infrasturcture")
 @Import(
     value = [
-        KakaoSearchBlogProperties::class
+        KakaoBlogSearchProperties::class
     ]
 )
 class TestApplication

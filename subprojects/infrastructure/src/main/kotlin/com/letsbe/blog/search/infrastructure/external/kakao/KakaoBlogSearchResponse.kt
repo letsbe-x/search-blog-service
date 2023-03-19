@@ -1,15 +1,15 @@
 package com.letsbe.blog.search.infrastructure.external.kakao
 
-import com.letsbe.blog.search.domain.dto.SearchBlogResultDto
+import com.letsbe.blog.search.domain.dto.BlogSearchResultDto
 import java.time.ZonedDateTime
 
-data class KakaoSearchBlogResponse(
-    val meta: KakaoSearchBlogMeta,
+data class KakaoBlogSearchResponse(
+    val meta: KakaoBlogSearchMeta,
     val documents: List<KakaoBlogDocument> = listOf()
 ) {
-    fun toSearchBlogResultDtoList(): List<SearchBlogResultDto> {
+    fun toBlogSearchResultDtoList(): List<BlogSearchResultDto> {
         return this.documents.map {
-            SearchBlogResultDto(
+            BlogSearchResultDto(
                 title = it.title,
                 contents = it.contents,
                 url = it.url,
@@ -19,7 +19,7 @@ data class KakaoSearchBlogResponse(
     }
 }
 
-data class KakaoSearchBlogMeta(
+data class KakaoBlogSearchMeta(
     val is_end: Boolean,
     val pageable_count: Int,
     val total_count: Int

@@ -4,20 +4,20 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-internal class SearchBlogRequestDoTest {
+internal class BlogSearchRequestDoTest {
 
     @Test
     fun validate() {
         assertDoesNotThrow {
-            SearchBlogRequestDo("query", "accuracy")
+            BlogSearchRequestDo("query", "accuracy")
         }
 
         assertThrows<IllegalArgumentException> {
-            SearchBlogRequestDo("query", "unrecognized")
+            BlogSearchRequestDo("query", "unrecognized")
         }
 
         assertThrows<IllegalArgumentException> {
-            SearchBlogRequestDo("", "recency")
+            BlogSearchRequestDo("", "recency")
         }
     }
 }

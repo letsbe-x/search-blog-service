@@ -1,8 +1,8 @@
 package com.letsbe.blog.search.infrasturcture.external
 
 import com.letsbe.blog.search.infrastructure.external.kakao.KakaoBlogDocument
-import com.letsbe.blog.search.infrastructure.external.kakao.KakaoSearchBlogClient
-import com.letsbe.blog.search.infrastructure.external.kakao.KakaoSearchBlogRequest
+import com.letsbe.blog.search.infrastructure.external.kakao.KakaoBlogSearchClient
+import com.letsbe.blog.search.infrastructure.external.kakao.KakaoBlogSearchRequest
 import com.letsbe.blog.search.infrasturcture.AbstractServiceTest
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
@@ -24,7 +24,7 @@ import java.time.ZonedDateTime
 class KakaoBlogSearchServiceTest : AbstractServiceTest() {
 
     @Autowired
-    private lateinit var kakaoSearchBlogClient: KakaoSearchBlogClient
+    private lateinit var kakaoBlogSearchClient: KakaoBlogSearchClient
 
     @Test
     fun `KakaoBlogSearchResponse Mapper Test`() {
@@ -32,7 +32,7 @@ class KakaoBlogSearchServiceTest : AbstractServiceTest() {
         val mockServer = MockRestServiceServer.createServer(RestTemplate())
 
         // will
-        val request = KakaoSearchBlogRequest(
+        val request = KakaoBlogSearchRequest(
             query = "test",
             sort = "accuracy",
             page = 1,
@@ -66,7 +66,7 @@ class KakaoBlogSearchServiceTest : AbstractServiceTest() {
 
         // then
         val results = runBlocking {
-            kakaoSearchBlogClient.search(request).awaitSingle()
+            kakaoBlogSearchClient.search(request).awaitSingle()
         }
 
         assertThat(results).isNotNull
