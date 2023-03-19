@@ -13,7 +13,7 @@ class SearchBlogService(
 
     suspend fun searchBlog(keyword: String, sort: String): List<BlogPostDto> {
         val request = SearchBlogRequestDo.from(keyword, sort)
-        val response = searchBlogClient.searchBlog(request)
+        val response = searchBlogClient.searchBlog(request).result()
 
         logger.info("response: {}", response)
         return response.map { BlogPostDto.from(it) }
