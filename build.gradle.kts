@@ -15,7 +15,7 @@ repositories {
 }
 
 allprojects {
-    group = "com.letsbe.blog.search"
+    group = "com.letsbe.blog"
     version = "0.0.1-SNAPSHOT"
 }
 

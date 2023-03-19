@@ -1,4 +1,4 @@
-package com.letsbe.blog.search.interfaces
+package com.letsbe.blog
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan

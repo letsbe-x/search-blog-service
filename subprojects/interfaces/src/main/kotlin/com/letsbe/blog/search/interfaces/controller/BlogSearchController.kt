@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
-@RestController("/blog")
-class BlogController(
+@RestController
+class BlogSearchController(
     private val blogSearchService: BlogSearchService
 ) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @GetMapping("/search")
+    @GetMapping("blog/search")
     suspend fun blogSearch(
         // TODO: @ModelAttribute를 사용하여, RequestParams를 DTO로 변환하여 사용하는 방법도 있음
         @RequestParam(required = true) query: String,
