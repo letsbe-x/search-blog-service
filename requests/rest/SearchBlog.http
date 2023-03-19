@@ -1,5 +1,12 @@
 ### 블로그 검색
-GET {{ host }}/search/blog
-Content-Type: application/x-www-form-urlencoded
+GET {{ host }}/search/blog?
+    query=윤하
+Content-Type: application/json
 
-query="윤하"
+
+
+### 블로그 검색 sort 옵션
+GET {{ host }}/search/blog?
+    query=윤하
+    &sort=recency
+Content-Type: application/json

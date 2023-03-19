@@ -1,5 +1,6 @@
 package com.letsbe.search.blog.infrastructure.external
 
+import com.letsbe.search.blog.domain.dto.SearchBlogRequestDto
 import com.letsbe.search.blog.domain.dto.SearchBlogResultDto
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogClient
 import com.letsbe.search.blog.infrastructure.external.kakao.KakaoSearchBlogRequest
@@ -13,14 +14,15 @@ class SearchBlogClient(
 ) {
     val logger = LoggerFactory.getLogger(this::class.java)
 
-    suspend fun searchBlog(keyword: String): List<SearchBlogResultDto> {
+    suspend fun searchBlog(request: SearchBlogRequestDto): List<SearchBlogResultDto> {
         val response = kakaoSearchBlogClient.search(
             KakaoSearchBlogRequest(
-                query = keyword
+                query = request.query,
+                sort = request.sort.kakao
             )
         ).awaitSingle()
 
-        logger.debug("kakaoResponse: {}", response)
+        logger.info("kakaoResponse: {}", response)
         // TODO: reactor를 사용하여 webflux답게 변경하는 방법을 생각해볼것
         return response?.toSearchBlogResultDtoList() ?: listOf()
     }
