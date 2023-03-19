@@ -15,7 +15,7 @@ data class KakaoSearchBlogResponse(
                 url = it.url,
                 datetime = it.datetime
             )
-        }
+        }.sortedByDescending { it.datetime }
     }
 }
 
