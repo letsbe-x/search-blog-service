@@ -16,7 +16,7 @@ import java.time.ZoneId
 @ConfigurationPropertiesScan(
     basePackages = [
         "com.letsbe.search.blog.interfaces.configuration"
-    ],
+    ]
 )
 class InterfaceConfiguration {
     @Bean

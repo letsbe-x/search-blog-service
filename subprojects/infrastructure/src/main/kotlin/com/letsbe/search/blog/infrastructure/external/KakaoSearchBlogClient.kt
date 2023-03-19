@@ -14,18 +14,22 @@ import reactor.core.publisher.Mono
     ]
 )
 class KakaoSearchBlogClient(
-    webClientBuilder: WebClient.Builder,
     kakaoSearchBlogProperties: KakaoSearchBlogProperties
 ) {
+
     /**
      * Kakao Blog Search API V2
      * - ref: https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide
      */
     private val baseUrl = kakaoSearchBlogProperties.baseUrl
     private val token = kakaoSearchBlogProperties.token
-    private val webClient = webClientBuilder.baseUrl(baseUrl).build()
 
-    fun search(kakaoSearchBlogRequest: KakaoSearchBlogRequest): Mono<KakaoSearchBlogResponse> {
+    val webClient = WebClient.builder()
+        .baseUrl(baseUrl)
+        .defaultHeader("Authorization", "KakaoAK $token")
+        .build()
+
+    suspend fun search(kakaoSearchBlogRequest: KakaoSearchBlogRequest): Mono<KakaoSearchBlogResponse> {
         return webClient.get()
             .uri {
                 it.queryParam("query", kakaoSearchBlogRequest.query)
@@ -34,7 +38,6 @@ class KakaoSearchBlogClient(
                     .queryParam("size", kakaoSearchBlogRequest.size)
                     .build()
             }
-            .header("Authorization", "KakaoAK $token")
             .retrieve()
             .bodyToMono()
     }
@@ -49,7 +52,7 @@ data class KakaoSearchBlogRequest(
 
 data class KakaoSearchBlogResponse(
     val meta: Map<String, Any>,
-    val documents: List<KakaoBlogDocument>
+    val documents: List<KakaoBlogDocument> = listOf()
 )
 
 data class KakaoBlogDocument(
