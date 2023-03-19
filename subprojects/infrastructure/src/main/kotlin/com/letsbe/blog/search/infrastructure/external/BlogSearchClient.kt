@@ -15,7 +15,7 @@ class BlogSearchClient(
 ) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    suspend fun searchBlog(request: BlogSearchRequestDto): BlogSearchResultListDo {
+    suspend fun search(request: BlogSearchRequestDto): BlogSearchResultListDo {
         val response = kakaoBlogSearchClient.search(
             KakaoBlogSearchRequest(
                 query = request.query,

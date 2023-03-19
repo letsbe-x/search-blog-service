@@ -24,7 +24,7 @@ class BlogController(
         @RequestParam(required = false, defaultValue = "1") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int
     ): Mono<BlogSearchResponse> {
-        val response = blogSearchService.blogSsearch(query, sort, page, size)
+        val response = blogSearchService.blogSearch(query, sort, page, size)
 
         logger.info("response: {}", response)
         return Mono.just(BlogSearchResponse(response))

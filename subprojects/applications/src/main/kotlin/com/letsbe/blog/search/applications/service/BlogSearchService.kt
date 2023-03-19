@@ -12,9 +12,9 @@ class BlogSearchService(
 ) {
     val logger: Logger = org.slf4j.LoggerFactory.getLogger(this::class.java)
 
-    suspend fun blogSsearch(keyword: String, sort: String, page: Int, size: Int): List<BlogPostDto> {
+    suspend fun blogSearch(keyword: String, sort: String, page: Int, size: Int): List<BlogPostDto> {
         val request = BlogSearchRequestDo(keyword, sort, page, size).toDto()
-        val response = blogSearchClient.searchBlog(request).toDtoList()
+        val response = blogSearchClient.search(request).toDtoList()
 
         logger.info("response: {}", response)
         return response.map { BlogPostDto.from(it) }
