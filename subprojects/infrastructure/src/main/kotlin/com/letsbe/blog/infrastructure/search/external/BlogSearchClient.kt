@@ -2,6 +2,7 @@ package com.letsbe.blog.infrastructure.search.external
 
 import com.letsbe.blog.domain.search.aggregates.BlogSearchResultListDo
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
+import com.letsbe.blog.domain.search.vo.SearchProviderSpec
 import com.letsbe.blog.infrastructure.search.external.kakao.KakaoBlogSearchClient
 import com.letsbe.blog.infrastructure.search.external.kakao.KakaoBlogSearchRequest
 import com.letsbe.blog.infrastructure.search.external.naver.NaverBlogSearchClient
@@ -14,9 +15,16 @@ import org.springframework.stereotype.Service
 @Service
 class BlogSearchClient(
     private val kakaoBlogSearchClient: KakaoBlogSearchClient,
-    private val naverBlogSearchClient: NaverBlogSearchClient,
+    private val naverBlogSearchClient: NaverBlogSearchClient
 ) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+    suspend fun search(request: BlogSearchRequestDto): BlogSearchResultListDo {
+        return when (request.provider) {
+            SearchProviderSpec.KAKAO -> kakaoSearch(request)
+            SearchProviderSpec.NAVER -> naverSearch(request)
+        }
+    }
 
     suspend fun kakaoSearch(request: BlogSearchRequestDto): BlogSearchResultListDo {
         val response = kakaoBlogSearchClient.search(
@@ -26,10 +34,9 @@ class BlogSearchClient(
                 page = request.page,
                 size = request.size
             )
-        ).awaitSingle()
+        ).awaitSingle() // TODO: reactor를 사용하여 webflux답게 변경하는 방법을 생각해볼것
 
         logger.info("kakaoResponse: {}", response)
-        // TODO: reactor를 사용하여 webflux답게 변경하는 방법을 생각해볼것
         return BlogSearchResultListDo(
             result = response?.toBlogSearchResultDtoList() ?: listOf()
         )

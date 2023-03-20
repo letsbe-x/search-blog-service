@@ -31,12 +31,8 @@ class BlogSearchService(
             blogRankService.updateRank(keyword)
         }
 
-        val kakaoResponse = blogSearchClient.kakaoSearch(request).toDtoList()
-        logger.info("kakaoResponse: {}", kakaoResponse)
-        val naverResponse = blogSearchClient.naverSearch(request).toDtoList()
-        logger.info("naverResponse: {}", naverResponse)
+        val response = blogSearchClient.search(request).toDtoList()
 
-        val response = kakaoResponse + naverResponse
         return response.map { BlogPostDto.from(it) }
     }
 }
