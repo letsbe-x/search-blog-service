@@ -6,6 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 // TODO: Check
 @SpringBootApplication
 @ConfigurationPropertiesScan(
-    "com.letsbe.blog.applications",
+    "com.letsbe.blog.applications"
 )
 class ApplicationsTestApplication
