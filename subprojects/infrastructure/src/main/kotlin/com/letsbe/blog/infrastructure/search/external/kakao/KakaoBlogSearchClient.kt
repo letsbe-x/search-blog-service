@@ -1,10 +1,14 @@
 package com.letsbe.blog.infrastructure.search.external.kakao
 
+import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
+import com.letsbe.blog.domain.search.dto.BlogSearchResultDto
 import com.letsbe.blog.infrastructure.configuration.KakaoBlogSearchProperties
+import com.letsbe.blog.infrastructure.search.external.iface.BlogSearchClient
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Component
@@ -15,7 +19,7 @@ import reactor.core.publisher.Mono
 )
 class KakaoBlogSearchClient(
     kakaoBlogSearchProperties: KakaoBlogSearchProperties
-) {
+) : BlogSearchClient {
 
     /**
      * Kakao Blog Search API V2
@@ -40,5 +44,26 @@ class KakaoBlogSearchClient(
             }
             .retrieve()
             .bodyToMono()
+    }
+
+    override suspend fun search(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
+        val kakaoBlogSearchRequest = KakaoBlogSearchRequest(
+            query = request.query,
+            sort = request.sort.kakao,
+            page = request.page,
+            size = request.size
+        )
+
+        return search(kakaoBlogSearchRequest)
+            .map { it.documents }
+            .flatMapMany { Flux.fromIterable(it) }
+            .map {
+                BlogSearchResultDto(
+                    title = it.title,
+                    contents = it.contents,
+                    url = it.url,
+                    datetime = it.datetime
+                )
+            } 
     }
 }

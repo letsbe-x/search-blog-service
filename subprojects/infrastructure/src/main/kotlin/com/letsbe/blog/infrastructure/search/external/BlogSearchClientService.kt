@@ -2,6 +2,7 @@ package com.letsbe.blog.infrastructure.search.external
 
 import com.letsbe.blog.domain.search.aggregates.BlogSearchResultListDo
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
+import com.letsbe.blog.domain.search.dto.BlogSearchResultDto
 import com.letsbe.blog.domain.search.vo.SearchProviderSpec
 import com.letsbe.blog.infrastructure.search.external.kakao.KakaoBlogSearchClient
 import com.letsbe.blog.infrastructure.search.external.kakao.KakaoBlogSearchRequest
@@ -11,14 +12,20 @@ import kotlinx.coroutines.reactive.awaitSingle
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 
 @Service
-class BlogSearchClient(
+class BlogSearchClientService(
     private val kakaoBlogSearchClient: KakaoBlogSearchClient,
     private val naverBlogSearchClient: NaverBlogSearchClient
 ) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
-
+    suspend fun searchV2(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
+        return when (request.provider) {
+            SearchProviderSpec.KAKAO -> kakaoBlogSearchClient.search(request)
+            SearchProviderSpec.NAVER -> naverBlogSearchClient.search(request)
+        }
+    }
     suspend fun search(request: BlogSearchRequestDto): BlogSearchResultListDo {
         return when (request.provider) {
             SearchProviderSpec.KAKAO -> kakaoSearch(request)

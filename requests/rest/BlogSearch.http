@@ -3,6 +3,11 @@ GET {{ host }}/blog/search?
     query=윤하
 Content-Type: application/json
 
+### 블로그 검색V2
+GET {{ host }}/blog/search/v2?
+    query=윤하
+Content-Type: application/json
+
 ### 블로그 검색 sort 옵션
 GET {{ host }}/blog/search?
     query=윤하
