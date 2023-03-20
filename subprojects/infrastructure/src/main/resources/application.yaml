@@ -4,6 +4,13 @@ kakao:
         baseurl: https://dapi.kakao.com/v2/search/blog
         token: ${KAKAO_REST_API_TOKEN}
 
+naver:
+  rest-api:
+    blog:
+      baseurl: https://openapi.naver.com/v1/search/blog.json
+      clientid: ${NAVER_CLIENT_ID}
+      clientsecret: ${NAVER_CLIENT_SECRET}
+
 spring:
   data:
     redis:
