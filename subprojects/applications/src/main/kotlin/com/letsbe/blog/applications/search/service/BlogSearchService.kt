@@ -6,7 +6,6 @@ import com.letsbe.blog.domain.search.aggregates.BlogSearchRequestDo
 import com.letsbe.blog.infrastructure.search.external.BlogSearchClientService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
@@ -16,7 +15,7 @@ class BlogSearchService(
     private val blogSearchClientService: BlogSearchClientService,
     private val blogRankService: BlogRankService
 ) {
-    val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     // TODO: 로직이 BlogSearchDO로 이동되어야 함
     suspend fun blogSearch(keyword: String, sort: String, page: Int, size: Int): Flux<BlogPostDto> {

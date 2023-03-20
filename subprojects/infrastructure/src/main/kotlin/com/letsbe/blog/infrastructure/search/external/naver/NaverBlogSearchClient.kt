@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.time.ZonedDateTime
 
 @Component
@@ -29,21 +30,30 @@ class NaverBlogSearchClient(
     private val clientId = naverBlogSearchProperties.clientId
     private val clientSecret = naverBlogSearchProperties.clientSecret
 
-    val webClient = WebClient.builder()
+    private val webClient = WebClient.builder()
         .baseUrl(baseUrl)
         .defaultHeader("X-Naver-Client-Id", clientId)
         .defaultHeader("X-Naver-Client-Secret", clientSecret)
         .build()
 
     override suspend fun search(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
-        val naverBlogSearchRequest = NaverBlogSearchRequest(
+        val naverBlogSearchRequest = buildBlogSearchRequest(request)
+
+        val response = performSearchRequest(naverBlogSearchRequest)
+
+        return processSearchResponse(response)
+    }
+
+    private fun buildBlogSearchRequest(request: BlogSearchRequestDto) =
+        NaverBlogSearchRequest(
             query = request.query,
             sort = request.sort.naver,
             start = request.page,
             display = request.size
         )
 
-        val response = webClient.get()
+    private fun performSearchRequest(naverBlogSearchRequest: NaverBlogSearchRequest): Mono<NaverBlogSearchResponse> {
+        return webClient.get()
             .uri {
                 it.queryParam("query", naverBlogSearchRequest.query)
                     .queryParam("sort", naverBlogSearchRequest.sort)
@@ -52,8 +62,10 @@ class NaverBlogSearchClient(
                     .build()
             }
             .retrieve()
-            .bodyToMono(NaverBlogSearchResponse::class.java)
+            .bodyToMono()
+    }
 
+    private fun processSearchResponse(response: Mono<NaverBlogSearchResponse>): Flux<BlogSearchResultDto> {
         return response.map { it.items }
             .flatMapMany { Flux.fromIterable(it) }
             .map {
