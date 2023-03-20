@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 
 @Component
 @ConfigurationPropertiesScan(
@@ -33,7 +32,14 @@ class KakaoBlogSearchClient(
         .defaultHeader("Authorization", "KakaoAK $token")
         .build()
 
-    suspend fun search(kakaoBlogSearchRequest: KakaoBlogSearchRequest): Mono<KakaoBlogSearchResponse> {
+    override suspend fun search(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
+        val kakaoBlogSearchRequest = KakaoBlogSearchRequest(
+            query = request.query,
+            sort = request.sort.kakao,
+            page = request.page,
+            size = request.size
+        )
+
         return webClient.get()
             .uri {
                 it.queryParam("query", kakaoBlogSearchRequest.query)
@@ -43,18 +49,7 @@ class KakaoBlogSearchClient(
                     .build()
             }
             .retrieve()
-            .bodyToMono()
-    }
-
-    override suspend fun search(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
-        val kakaoBlogSearchRequest = KakaoBlogSearchRequest(
-            query = request.query,
-            sort = request.sort.kakao,
-            page = request.page,
-            size = request.size
-        )
-
-        return search(kakaoBlogSearchRequest)
+            .bodyToMono(KakaoBlogSearchResponse::class.java)
             .map { it.documents }
             .flatMapMany { Flux.fromIterable(it) }
             .map {
@@ -64,6 +59,6 @@ class KakaoBlogSearchClient(
                     url = it.url,
                     datetime = it.datetime
                 )
-            } 
+            }
     }
 }

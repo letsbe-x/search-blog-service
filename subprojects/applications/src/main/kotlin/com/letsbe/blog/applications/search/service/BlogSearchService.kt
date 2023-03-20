@@ -19,11 +19,8 @@ class BlogSearchService(
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // TODO: 로직이 BlogSearchDO로 이동되어야 함
-    suspend fun blogSearch(keyword: String, sort: String, page: Int, size: Int): List<BlogPostDto> {
+    suspend fun blogSearch(keyword: String, sort: String, page: Int, size: Int): Flux<BlogPostDto> {
         val request = BlogSearchRequestDo(keyword, sort, page, size).toDto()
-
-        logger.info("request: {}", request)
-        logger.info("Thread: {}", Thread.currentThread().name)
 
         // TODO: 서비스 연계는 DO에서 관리해야합니다. / 서비스 연계는 비즈니스 로직이 아닙니다.
         withContext(Dispatchers.IO) {
@@ -32,20 +29,6 @@ class BlogSearchService(
             blogRankService.updateRank(keyword)
         }
 
-        val response = blogSearchClientService.search(request).toDtoList()
-
-        return response.map { BlogPostDto.from(it) }
-    }
-
-    suspend fun blogSearchV2(keyword: String, sort: String, page: Int, size: Int): Flux<BlogPostDto> {
-        val request = BlogSearchRequestDo(keyword, sort, page, size).toDto()
-
-        withContext(Dispatchers.IO) {
-            logger.info("keyword: {}", keyword)
-            logger.info("Thread IO: {}", Thread.currentThread().name)
-            blogRankService.updateRank(keyword)
-        }
-
-        return blogSearchClientService.searchV2(request).map { BlogPostDto.from(it) }
+        return blogSearchClientService.search(request).map { BlogPostDto.from(it) }
     }
 }
