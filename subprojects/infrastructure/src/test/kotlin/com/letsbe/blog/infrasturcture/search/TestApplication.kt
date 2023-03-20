@@ -1,6 +1,6 @@
 package com.letsbe.blog.infrasturcture.search
 
-import com.letsbe.blog.infrastructure.search.configuration.KakaoBlogSearchProperties
+import com.letsbe.blog.infrastructure.configuration.KakaoBlogSearchProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.Import

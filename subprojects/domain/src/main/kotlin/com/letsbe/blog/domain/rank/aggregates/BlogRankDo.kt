@@ -13,38 +13,38 @@ class BlogRankDo {
         val item = rankDB.find { it.keyword == keyword }
         if (item != null) {
             rankDB.remove(item)
-            rankDB.add(item.copy(count = item.count + 1))
+            rankDB.add(item.copy(requestCount = item.requestCount + 1))
         } else {
-            rankDB.add(BlogRankItemDto(keyword = keyword, count = 1))
+            rankDB.add(BlogRankItemDto(keyword = keyword, requestCount = 1))
         }
     }
 
     // TODO: 레디스 Sortedset 붙이기 전에 돌아가게 만들어보자
     private val rankDB: ConcurrentSkipListSet<BlogRankItemDto> = ConcurrentSkipListSet(
-        compareByDescending<BlogRankItemDto> { it.count }
+        compareByDescending<BlogRankItemDto> { it.requestCount }
     )
 
     init {
         val sampleList = listOf(
             BlogRankItemDto(
                 keyword = "테스트",
-                count = 100
+                requestCount = 100
             ),
             BlogRankItemDto(
                 keyword = "테스트2",
-                count = 50
+                requestCount = 50
             ),
             BlogRankItemDto(
                 keyword = "테스트3",
-                count = 30
+                requestCount = 30
             ),
             BlogRankItemDto(
                 keyword = "테스트4",
-                count = 20
+                requestCount = 20
             ),
             BlogRankItemDto(
                 keyword = "테스트5",
-                count = 10
+                requestCount = 10
             )
         )
         rankDB.addAll(sampleList)

@@ -1,6 +1,6 @@
 package com.letsbe.blog.infrastructure.search.external.kakao
 
-import com.letsbe.blog.infrastructure.search.configuration.KakaoBlogSearchProperties
+import com.letsbe.blog.infrastructure.configuration.KakaoBlogSearchProperties
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
