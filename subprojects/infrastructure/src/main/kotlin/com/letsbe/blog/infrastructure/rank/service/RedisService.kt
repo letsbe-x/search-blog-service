@@ -31,9 +31,6 @@ class RedisService(
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-//    @Resource(name = "redisTemplate")
-//    private lateinit var redisTemplate: RedisTemplate<String, RankItemEntityId>
-
     // TODO: README 초기화 읽어볼것
     fun redisTemplate(): RedisTemplate<String, RankItemEntityId> {
         val redisTemplate = RedisTemplate<String, RankItemEntityId>()
@@ -48,23 +45,21 @@ class RedisService(
         return redisTemplate
     }
 
-    fun addScore(keyworkd: RankItemEntityId) = addScore("ranking", keyworkd, 1)
+    fun addScore(keyworkd: RankItemEntityId) = addScore(keyworkd, DEFAULT_INCREMENT_SCORE)
 
-    private fun addScore(key: String, keyword: RankItemEntityId, score: Int) {
+    private fun addScore(keyword: RankItemEntityId, score: Int) {
         val redisSortedSet = redisTemplate().opsForZSet()
-//        val redisSortedSet = redisTemplate.opsForZSet()
-        redisSortedSet.incrementScore(key, keyword, score.toDouble())
+        redisSortedSet.incrementScore(RANKING_KEY, keyword, score.toDouble())
     }
 
     fun getRankingItemList(): List<BlogRankItemDto> {
         val redisSortedSet = redisTemplate().opsForZSet()
-//        val redisSortedSet = redisTemplate.opsForZSet()
 
-        if (redisSortedSet.size("ranking") == 0L) {
+        if (redisSortedSet.size(RANKING_KEY) == 0L) {
             return emptyList()
         }
 
-        val tuple = redisSortedSet.reverseRangeWithScores("ranking", 0, 9) ?: emptySet()
+        val tuple = redisSortedSet.reverseRangeWithScores(RANKING_KEY, 0, 9) ?: emptySet()
         logger.info("tuple: $tuple")
 
         val listEntity = tuple.map {
@@ -80,6 +75,11 @@ class RedisService(
                 requestCount = it.requestCount
             )
         }
+    }
+
+    companion object {
+        const val RANKING_KEY = "ranking"
+        const val DEFAULT_INCREMENT_SCORE = 1
     }
 
     private lateinit var redisServer: RedisServer
