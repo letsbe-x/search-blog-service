@@ -1,5 +1,9 @@
 tasks.bootJar.get().enabled = false
 
+plugins {
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.10"
+}
+
 dependencies {
     implementation(project(":domain"))
 
@@ -12,7 +16,18 @@ dependencies {
     implementation("it.ozimov:embedded-redis:0.7.3") {
         exclude(group = "org.slf4j", module = "slf4j-simple")
     }
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    runtimeOnly("com.h2database:h2:2.1.214")
 
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.projectreactor:reactor-test")
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
 }

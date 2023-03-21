@@ -1,29 +1,25 @@
 package com.letsbe.blog.applications.rank.service
 
 import com.letsbe.blog.applications.rank.dto.BlogRankDto
-import com.letsbe.blog.infrastructure.rank.service.RedisService
+import com.letsbe.blog.infrastructure.rank.BlogRankClient
 import org.springframework.stereotype.Service
 
 @Service
 class BlogRankService(
-    private val redisService: RedisService
+    private val blogRankClient: BlogRankClient
 ) {
-    // TODO: Do 사용에 대해서 좀 더 생각해볼것
-    // TODO: DO로직 대해서는 0.11.x JPA를 사용하면서 다시 생각해보자
     fun getRank(): List<BlogRankDto> {
-        return redisService.getRankingItemList()
-            .mapIndexed() { idx, item ->
-                BlogRankDto(
-                    rank = idx + 1,
-                    keyword = item.keyword,
-                    count = item.requestCount
-                )
-            }
+        val blogRank = blogRankClient.getBlogRank()
+        return blogRank.mapIndexed { index, blogRankItemDto ->
+            BlogRankDto(
+                rank = index + 1,
+                keyword = blogRankItemDto.keyword,
+                count = blogRankItemDto.requestCount
+            )
+        }
     }
 
     fun updateRank(keyword: String) {
-        // TODO: DO로직 대해서는 0.11.x JPA를 사용하면서 다시 생각해보자
-//        blogRankDo.updateRank(keyword)
-        redisService.addScore(keyword)
+        blogRankClient.updateRank(keyword)
     }
 }
