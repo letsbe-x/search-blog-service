@@ -15,8 +15,8 @@ class BlogSearchController(
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @GetMapping("blog/search/v2")
-    suspend fun blogSearchV2(
+    @GetMapping("blog/search")
+    suspend fun blogSearch(
         // TODO: @ModelAttribute를 사용하여, RequestParams를 DTO로 변환하여 사용하는 방법도 있음
         @RequestParam(required = true) query: String,
         @RequestParam(required = false, defaultValue = "accuracy") sort: String,

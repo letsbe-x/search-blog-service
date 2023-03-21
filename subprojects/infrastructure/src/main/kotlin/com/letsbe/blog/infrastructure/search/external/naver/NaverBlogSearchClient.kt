@@ -2,6 +2,7 @@ package com.letsbe.blog.infrastructure.search.external.naver
 
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
 import com.letsbe.blog.domain.search.dto.BlogSearchResultDto
+import com.letsbe.blog.domain.search.vo.SearchProviderSpec
 import com.letsbe.blog.infrastructure.configuration.NaverBlogSearchProperties
 import com.letsbe.blog.infrastructure.search.external.iface.BlogSearchClient
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -73,7 +74,8 @@ class NaverBlogSearchClient(
                     title = it.title,
                     contents = it.description,
                     url = it.link,
-                    datetime = ZonedDateTime.now() // TODO: parser
+                    datetime = ZonedDateTime.now(), // TODO: parse
+                    searchProvider = SearchProviderSpec.NAVER
                 )
             }
     }

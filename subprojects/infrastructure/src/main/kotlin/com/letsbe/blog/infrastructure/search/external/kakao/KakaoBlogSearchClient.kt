@@ -2,6 +2,7 @@ package com.letsbe.blog.infrastructure.search.external.kakao
 
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
 import com.letsbe.blog.domain.search.dto.BlogSearchResultDto
+import com.letsbe.blog.domain.search.vo.SearchProviderSpec
 import com.letsbe.blog.infrastructure.configuration.KakaoBlogSearchProperties
 import com.letsbe.blog.infrastructure.search.external.iface.BlogSearchClient
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -71,7 +72,8 @@ class KakaoBlogSearchClient(
                     title = it.title,
                     contents = it.contents,
                     url = it.url,
-                    datetime = it.datetime
+                    datetime = it.datetime,
+                    searchProvider = SearchProviderSpec.KAKAO
                 )
             }
 }
