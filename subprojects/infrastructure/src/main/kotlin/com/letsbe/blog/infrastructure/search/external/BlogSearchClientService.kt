@@ -3,7 +3,7 @@ package com.letsbe.blog.infrastructure.search.external
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
 import com.letsbe.blog.domain.search.dto.BlogSearchResultDto
 import com.letsbe.blog.domain.search.vo.SearchProviderSpec
-import com.letsbe.blog.domain.search.vo.nextOrNull
+import com.letsbe.blog.domain.util.EnumUtils.nextOrNull
 import com.letsbe.blog.infrastructure.search.external.kakao.KakaoBlogSearchClient
 import com.letsbe.blog.infrastructure.search.external.naver.NaverBlogSearchClient
 import org.slf4j.LoggerFactory
@@ -21,8 +21,13 @@ class BlogSearchClientService(
     suspend fun search(request: BlogSearchRequestDto): Flux<BlogSearchResultDto> {
         return try {
             when (request.provider) {
-                SearchProviderSpec.KAKAO -> kakaoBlogSearchClient.search(request)
-                SearchProviderSpec.NAVER -> naverBlogSearchClient.search(request)
+                SearchProviderSpec.TOTAL ->
+                    Flux.merge(kakaoBlogSearchClient.search(request), naverBlogSearchClient.search(request)).take(request.size.toLong()) // 검색결과가 적은 경우, 같이 노출됩니다.
+                SearchProviderSpec.KAKAO ->
+                    kakaoBlogSearchClient.search(request)
+                SearchProviderSpec.NAVER ->
+                    naverBlogSearchClient.search(request)
+                else -> throw IllegalArgumentException("Invalid provider: ${request.provider}")
             }
         } catch (e: WebClientResponseException) {
             logger.error("BlogSearchClientService.search: {}", e.message)

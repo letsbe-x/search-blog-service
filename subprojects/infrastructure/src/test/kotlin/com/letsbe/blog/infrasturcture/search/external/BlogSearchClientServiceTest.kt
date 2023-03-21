@@ -10,7 +10,6 @@ import com.letsbe.blog.infrastructure.search.external.naver.NaverBlogSearchClien
 import com.letsbe.blog.infrasturcture.search.AbstractServiceTest
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.never
