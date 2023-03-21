@@ -1,23 +1,23 @@
-package com.letsbe.blog.domain.search.aggregates
+package com.letsbe.blog.domain.search.context
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-internal class BlogSearchRequestDoTest {
+internal class BlogSearchRequestContextTest {
 
     @Test
     fun validate() {
         assertDoesNotThrow {
-            BlogSearchRequestDo("query", "accuracy")
+            BlogSearchRequestContext("query", "accuracy")
         }
 
         assertThrows<IllegalArgumentException> {
-            BlogSearchRequestDo("query", "unrecognized")
+            BlogSearchRequestContext("query", "unrecognized")
         }
 
         assertThrows<IllegalArgumentException> {
-            BlogSearchRequestDo("", "recency")
+            BlogSearchRequestContext("", "recency")
         }
     }
 }

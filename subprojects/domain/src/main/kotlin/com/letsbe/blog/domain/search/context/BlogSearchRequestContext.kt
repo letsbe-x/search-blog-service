@@ -1,9 +1,9 @@
-package com.letsbe.blog.domain.search.aggregates
+package com.letsbe.blog.domain.search.context
 
 import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
 import com.letsbe.blog.domain.search.vo.SearchProviderSpec
 import com.letsbe.blog.domain.search.vo.SearchSortBySpec
-data class BlogSearchRequestDo(
+data class BlogSearchRequestContext(
     val query: String,
     val sort: String,
     val page: Int = 1,

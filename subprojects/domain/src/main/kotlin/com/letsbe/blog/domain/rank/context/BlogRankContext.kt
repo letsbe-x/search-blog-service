@@ -1,9 +1,9 @@
-package com.letsbe.blog.domain.rank.aggregates
+package com.letsbe.blog.domain.rank.context
 
 import com.letsbe.blog.domain.rank.dto.BlogRankItemDto
 import java.util.concurrent.ConcurrentSkipListSet
 
-class BlogRankDo {
+class BlogRankContext {
 
     fun getRank(): List<BlogRankItemDto> {
         return rankDB.take(MAX_RANK_COUNT)

@@ -2,7 +2,7 @@ package com.letsbe.blog.applications.search.service
 
 import com.letsbe.blog.applications.rank.service.BlogRankService
 import com.letsbe.blog.applications.search.dto.BlogPostDto
-import com.letsbe.blog.domain.search.aggregates.BlogSearchRequestDo
+import com.letsbe.blog.domain.search.context.BlogSearchRequestContext
 import com.letsbe.blog.infrastructure.search.external.BlogSearchClientService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,7 +19,7 @@ class BlogSearchService(
 
     // TODO: 로직이 BlogSearchDO로 이동되어야 함
     suspend fun blogSearch(keyword: String, sort: String, page: Int, size: Int, provider: String): Flux<BlogPostDto> {
-        val request = BlogSearchRequestDo(keyword, sort, page, size, provider).toDto()
+        val request = BlogSearchRequestContext(keyword, sort, page, size, provider).toDto()
 
         // TODO: 서비스 연계는 DO에서 관리해야합니다. / 서비스 연계는 비즈니스 로직이 아닙니다.
         withContext(Dispatchers.IO) {

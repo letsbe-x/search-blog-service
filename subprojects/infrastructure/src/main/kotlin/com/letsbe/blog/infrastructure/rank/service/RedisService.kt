@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.ZSetOperations
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.stereotype.Repository
@@ -30,9 +31,12 @@ class RedisService(
     private val redisPort: Int = redisProperties.port
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+    private val redisTemplate: RedisTemplate<String, RankItemEntityId> by lazy { createRedisTemplate() }
+    private val redisSortedSet: ZSetOperations<String, RankItemEntityId> by lazy { redisTemplate.opsForZSet() }
 
-    // TODO: README 초기화 읽어볼것
-    fun redisTemplate(): RedisTemplate<String, RankItemEntityId> {
+    private lateinit var redisServer: RedisServer
+
+    fun createRedisTemplate(): RedisTemplate<String, RankItemEntityId> {
         val redisTemplate = RedisTemplate<String, RankItemEntityId>()
         redisTemplate.keySerializer = StringRedisSerializer()
         redisTemplate.valueSerializer = StringRedisSerializer() // RankItemEntityId는 String으로 저장
@@ -48,13 +52,11 @@ class RedisService(
     fun addScore(keyworkd: RankItemEntityId) = addScore(keyworkd, DEFAULT_INCREMENT_SCORE)
 
     private fun addScore(keyword: RankItemEntityId, score: Int) {
-        val redisSortedSet = redisTemplate().opsForZSet()
+        val redisSortedSet = createRedisTemplate().opsForZSet()
         redisSortedSet.incrementScore(RANKING_KEY, keyword, score.toDouble())
     }
 
     fun getRankingItemList(): List<BlogRankItemDto> {
-        val redisSortedSet = redisTemplate().opsForZSet()
-
         if (redisSortedSet.size(RANKING_KEY) == 0L) {
             return emptyList()
         }
@@ -65,7 +67,7 @@ class RedisService(
         val listEntity = tuple.map {
             RankItemEntity(
                 it.value as RankItemEntityId,
-                it.score?.toInt() ?: 0 // TODO: 0이면 에러
+                it.score?.toInt() ?: 0
             )
         }
 
@@ -81,8 +83,6 @@ class RedisService(
         const val RANKING_KEY = "ranking"
         const val DEFAULT_INCREMENT_SCORE = 1
     }
-
-    private lateinit var redisServer: RedisServer
 
     @PostConstruct
     @Throws(IOException::class)
