@@ -1,4 +1,4 @@
-package com.letsbe.blog.infrastructure.rank.service
+package com.letsbe.blog.infrastructure.rank.repository
 
 import com.letsbe.blog.domain.rank.dto.BlogRankItemDto
 import com.letsbe.blog.domain.rank.entity.RankItemEntity
@@ -24,7 +24,7 @@ import java.io.IOException
     ]
 )
 @EnableRedisRepositories
-class RedisService(
+class RedisRepository(
     redisProperties: RedisProperties
 ) {
     private val redisHost: String = redisProperties.host

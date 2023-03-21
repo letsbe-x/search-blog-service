@@ -1,33 +1,37 @@
 package com.letsbe.blog.infrastructure.rank
 
 import com.letsbe.blog.domain.rank.dto.BlogRankItemDto
-import com.letsbe.blog.infrastructure.rank.entity.BlogRequestEntity
-import com.letsbe.blog.infrastructure.rank.repository.BlogRankItemRepository
-import com.letsbe.blog.infrastructure.rank.service.RedisService
+import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
+import com.letsbe.blog.infrastructure.rank.entity.BlogRequestHistoryEntity
+import com.letsbe.blog.infrastructure.rank.repository.BlogRequestHistoryInfoRepository
+import com.letsbe.blog.infrastructure.rank.repository.RedisRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class BlogRankClient(
-    private val redisService: RedisService,
-    private val blogRankItemRepository: BlogRankItemRepository
+    private val redisRepository: RedisRepository,
+    private val blogRequestHistoryRpeository: BlogRequestHistoryInfoRepository
 ) {
-    // TODO: Do 사용에 대해서 좀 더 생각해볼것
-    // TODO: DO로직 대해서는 0.11.x JPA를 사용하면서 다시 생각해보자
+    private val logger = LoggerFactory.getLogger(this::class.java)
     fun getBlogRank(): List<BlogRankItemDto> {
-//        return redisService.getRankingItemList()
-        return blogRankItemRepository.findTop10ByOrderByCountDesc()
+        logger.info("Redis : {}", redisRepository.getRankingItemList())
+        logger.info(
+            "DBHistroyRepository : {}",
+            blogRequestHistoryRpeository.getAllByBlogRequestItem()
+                .map {
+                    BlogRankItemDto(it.getKeyword(), it.getCount())
+                }
+        )
+
+        return blogRequestHistoryRpeository.getAllByBlogRequestItem()
             .map {
-                BlogRankItemDto(it.keyword, it.count)
+                BlogRankItemDto(it.getKeyword(), it.getCount())
             }
     }
 
-    fun updateRank(keyword: String) {
-        // TODO: DO로직 대해서는 0.11.x JPA를 사용하면서 다시 생각해보자
-        redisService.addScore(keyword)
-        blogRankItemRepository.getBlogRequestEntityByKeyword(keyword)?.let {
-            blogRankItemRepository.save(it.copy(count = it.count + 1))
-        } ?: run {
-            blogRankItemRepository.save(BlogRequestEntity(keyword = keyword, count = 1))
-        }
+    fun increaseCount(request: BlogSearchRequestDto) {
+        redisRepository.addScore(request.query)
+        blogRequestHistoryRpeository.save(BlogRequestHistoryEntity(keyword = request.query, provider = request.provider.alias))
     }
 }

@@ -25,7 +25,7 @@ class BlogSearchService(
         withContext(Dispatchers.IO) {
             logger.info("keyword: {}", keyword)
             logger.info("Thread IO: {}", Thread.currentThread().name)
-            blogRankService.updateRank(keyword)
+            blogRankService.updateRank(request)
         }
 
         return blogSearchClientService.search(request).map { BlogPostDto.from(it) }

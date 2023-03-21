@@ -1,6 +1,7 @@
 package com.letsbe.blog.applications.rank.service
 
 import com.letsbe.blog.applications.rank.dto.BlogRankDto
+import com.letsbe.blog.domain.search.dto.BlogSearchRequestDto
 import com.letsbe.blog.infrastructure.rank.BlogRankClient
 import org.springframework.stereotype.Service
 
@@ -19,7 +20,7 @@ class BlogRankService(
         }
     }
 
-    fun updateRank(keyword: String) {
-        blogRankClient.updateRank(keyword)
+    fun updateRank(request: BlogSearchRequestDto) {
+        blogRankClient.increaseCount(request)
     }
 }
