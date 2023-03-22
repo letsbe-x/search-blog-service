@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface BlogRequestHistoryInfoRepository : JpaRepository<BlogRequestHistoryEntity, String> {
+    // TODO: querydsl로 변경
     @Query("SELECT keyword, count(*) as count FROM blog_request_history_info group by keyword order by count desc", nativeQuery = true)
     fun getAllByBlogRequestItem(): List<BlogRequestItem>
 }

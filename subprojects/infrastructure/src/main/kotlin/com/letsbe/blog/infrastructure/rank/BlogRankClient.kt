@@ -6,32 +6,34 @@ import com.letsbe.blog.infrastructure.rank.entity.BlogRequestHistoryEntity
 import com.letsbe.blog.infrastructure.rank.repository.BlogRequestHistoryInfoRepository
 import com.letsbe.blog.infrastructure.rank.repository.RedisRepository
 import org.slf4j.LoggerFactory
+import org.springframework.data.redis.RedisConnectionFailureException
 import org.springframework.stereotype.Service
 
 @Service
 class BlogRankClient(
     private val redisRepository: RedisRepository,
-    private val blogRequestHistoryRpeository: BlogRequestHistoryInfoRepository
+    private val blogRequestHistoryInfoRepository: BlogRequestHistoryInfoRepository
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
-    fun getBlogRank(): List<BlogRankItemDto> {
-        logger.info("Redis : {}", redisRepository.getRankingItemList())
-        logger.info(
-            "DBHistroyRepository : {}",
-            blogRequestHistoryRpeository.getAllByBlogRequestItem()
-                .map {
-                    BlogRankItemDto(it.getKeyword(), it.getCount())
-                }
-        )
-
-        return blogRequestHistoryRpeository.getAllByBlogRequestItem()
-            .map {
-                BlogRankItemDto(it.getKeyword(), it.getCount())
-            }
+    fun getBlogRequestRank(): List<BlogRankItemDto> {
+        return try {
+            redisRepository.getBlogRequestItem()
+        } catch (e: RedisConnectionFailureException) {
+            logger.error("redis connection error: {}", e.message)
+            val totalList = blogRequestHistoryInfoRepository.getAllByBlogRequestItem().map { blogRequestItem -> BlogRankItemDto(blogRequestItem.getKeyword(), blogRequestItem.getCount()) }
+            redisRepository.initializeRankStore(totalList)
+            totalList
+        }
     }
 
     fun increaseCount(request: BlogSearchRequestDto) {
-        redisRepository.addScore(request.query)
-        blogRequestHistoryRpeository.save(BlogRequestHistoryEntity(keyword = request.query, provider = request.provider.alias))
+        blogRequestHistoryInfoRepository.save(BlogRequestHistoryEntity(keyword = request.query, provider = request.provider.alias))
+        try {
+            redisRepository.increaseRequestCounter(request.query)
+        } catch (e: RedisConnectionFailureException) {
+            logger.error("redis connection error: {}", e.message)
+            val totalList = blogRequestHistoryInfoRepository.getAllByBlogRequestItem().map { blogRequestItem -> BlogRankItemDto(blogRequestItem.getKeyword(), blogRequestItem.getCount()) }
+            redisRepository.initializeRankStore(totalList)
+        }
     }
 }

@@ -7,7 +7,13 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "blog_request_history_info")
+@Table(
+    name = "blog_request_history_info",
+    indexes = [
+        jakarta.persistence.Index(name = "idx_blog_request_history_info_keyword", columnList = "keyword"),
+        jakarta.persistence.Index(name = "idx_blog_request_history_info_provider", columnList = "provider")
+    ]
+)
 data class BlogRequestHistoryEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

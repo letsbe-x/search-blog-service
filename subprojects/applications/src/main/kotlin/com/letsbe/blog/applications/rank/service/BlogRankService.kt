@@ -10,7 +10,7 @@ class BlogRankService(
     private val blogRankClient: BlogRankClient
 ) {
     fun getRank(): List<BlogRankDto> {
-        val blogRank = blogRankClient.getBlogRank()
+        val blogRank = blogRankClient.getBlogRequestRank()
         return blogRank.mapIndexed { index, blogRankItemDto ->
             BlogRankDto(
                 rank = index + 1,

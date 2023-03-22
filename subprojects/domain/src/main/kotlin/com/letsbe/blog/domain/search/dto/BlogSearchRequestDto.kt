@@ -5,8 +5,8 @@ import com.letsbe.blog.domain.search.vo.SearchSortBySpec
 
 data class BlogSearchRequestDto(
     val query: String,
-    val sort: SearchSortBySpec,
-    val page: Int,
-    val size: Int,
+    val sort: SearchSortBySpec = SearchSortBySpec.ACCURACY,
+    val page: Int = 1,
+    val size: Int = 10,
     val provider: SearchProviderSpec = SearchProviderSpec.KAKAO
 )

@@ -2,7 +2,7 @@ package com.letsbe.blog.interfaces.rank.controller
 
 import com.letsbe.blog.applications.rank.service.BlogRankService
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
@@ -12,7 +12,7 @@ class BlogRankController(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @GetMapping("blog/rank")
+    @PostMapping("blog/rank")
     suspend fun getBlogRank(): Mono<BlogRankResponse> {
         val response = blogRankService.getRank()
 

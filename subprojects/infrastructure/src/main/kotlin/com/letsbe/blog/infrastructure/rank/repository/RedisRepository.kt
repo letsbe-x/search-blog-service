@@ -36,27 +36,22 @@ class RedisRepository(
 
     private lateinit var redisServer: RedisServer
 
-    fun createRedisTemplate(): RedisTemplate<String, RankItemEntityId> {
-        val redisTemplate = RedisTemplate<String, RankItemEntityId>()
-        redisTemplate.keySerializer = StringRedisSerializer()
-        redisTemplate.valueSerializer = StringRedisSerializer() // RankItemEntityId는 String으로 저장
-
-        val lettuceConnectionFactory = LettuceConnectionFactory(redisHost, redisPort)
-        lettuceConnectionFactory.afterPropertiesSet()
-
-        redisTemplate.setConnectionFactory(lettuceConnectionFactory)
-        redisTemplate.afterPropertiesSet()
-        return redisTemplate
-    }
-
-    fun addScore(keyworkd: RankItemEntityId) = addScore(keyworkd, DEFAULT_INCREMENT_SCORE)
-
-    private fun addScore(keyword: RankItemEntityId, score: Int) {
+    fun initializeRankStore(totalList: List<BlogRankItemDto>) {
+        // initialize RankList Key: ranking
         val redisSortedSet = createRedisTemplate().opsForZSet()
-        redisSortedSet.incrementScore(RANKING_KEY, keyword, score.toDouble())
+        redisSortedSet.removeRange(RANKING_KEY, 0, -1)
+
+        totalList.forEach {
+            redisSortedSet.add(RANKING_KEY, it.keyword, it.requestCount.toDouble())
+        }
     }
 
-    fun getRankingItemList(): List<BlogRankItemDto> {
+    fun increaseRequestCounter(keyword: String) {
+        val redisSortedSet = createRedisTemplate().opsForZSet()
+        redisSortedSet.incrementScore(RANKING_KEY, keyword, DEFAULT_INCREMENT_SCORE.toDouble())
+    }
+
+    fun getBlogRequestItem(): List<BlogRankItemDto> {
         if (redisSortedSet.size(RANKING_KEY) == 0L) {
             return emptyList()
         }
@@ -79,6 +74,18 @@ class RedisRepository(
         }
     }
 
+    private fun createRedisTemplate(): RedisTemplate<String, RankItemEntityId> {
+        val redisTemplate = RedisTemplate<String, RankItemEntityId>()
+        redisTemplate.keySerializer = StringRedisSerializer()
+        redisTemplate.valueSerializer = StringRedisSerializer() // RankItemEntityId는 String으로 저장
+
+        val lettuceConnectionFactory = LettuceConnectionFactory(redisHost, redisPort)
+        lettuceConnectionFactory.afterPropertiesSet()
+
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory)
+        redisTemplate.afterPropertiesSet()
+        return redisTemplate
+    }
     companion object {
         const val RANKING_KEY = "ranking"
         const val DEFAULT_INCREMENT_SCORE = 1
