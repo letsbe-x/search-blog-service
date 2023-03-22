@@ -27,11 +27,12 @@ class BlogSearchClientService(
                     kakaoBlogSearchClient.search(request)
                 SearchProviderSpec.NAVER ->
                     naverBlogSearchClient.search(request)
-                else -> throw IllegalArgumentException("Invalid provider: ${request.provider}")
+                else ->
+                    throw WebClientResponseException("${request.provider} API is not available", 500, "${request.provider} API is not available", null, null, null)
             }
         } catch (e: WebClientResponseException) {
-            logger.error("BlogSearchClientService.search: {}", e.message)
-            logger.error("{} API is not available", request.provider)
+            logger.info("BlogSearchClientService.search: {}", e.message)
+            logger.info("{} API is not available", request.provider)
             search(
                 request.copy(
                     provider = request.provider.nextOrNull()
