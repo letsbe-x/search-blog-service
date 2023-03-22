@@ -38,8 +38,8 @@ Content-Type: application/json
 Response code: 200 (OK); Time: 58ms (58 ms); Content length: 3833 bytes (3.83 kB)
 ```
 ```json
-...
 [
+  ...
   {
     "title": "&lt; <b>윤하</b> 앵콜 콘서트 c/2023YH 후기! &gt;",
     "contents": "&lt; <b>윤하</b> 앵콜 콘서트 c/2023YH 후기. &gt; Index. Prologue. 실패한 티켓팅, 양일 스탠딩이라니... 내가? Chapter 1. 즐기다 보니 금세 끝나버린 첫콘. Chapter 2. 막콘, 오늘을 잊지 않을게... Chapter 3. 콘서트를 빛나게 만드는 우리들, &lt;Y.HOLICS&gt; Chapter 4. 체조? 고척? 잠실? 그건 절대 꿈이 아니야... Epilogue. 끝...",
@@ -47,7 +47,8 @@ Response code: 200 (OK); Time: 58ms (58 ms); Content length: 3833 bytes (3.83 kB
     "datetime": "2023-03-19T09:41:31Z",
     "searchProvider": "KAKAO"
   }
-...
+  ...
+]
 ```
 
 ### 블로그 실시간 순위 API
@@ -80,16 +81,45 @@ Content-Type: text/event-stream;charset=UTF-8
 Response code: 200 (OK); Time: 24ms (24 ms)
 ```
 ```json
-...
-[
-  {
-    "title": "&lt; <b>윤하</b> 앵콜 콘서트 c/2023YH 후기! &gt;",
-    "contents": "&lt; <b>윤하</b> 앵콜 콘서트 c/2023YH 후기. &gt; Index. Prologue. 실패한 티켓팅, 양일 스탠딩이라니... 내가? Chapter 1. 즐기다 보니 금세 끝나버린 첫콘. Chapter 2. 막콘, 오늘을 잊지 않을게... Chapter 3. 콘서트를 빛나게 만드는 우리들, &lt;Y.HOLICS&gt; Chapter 4. 체조? 고척? 잠실? 그건 절대 꿈이 아니야... Epilogue. 끝...",
-    "url": "http://youniverse-for-younha.tistory.com/10",
-    "datetime": "2023-03-19T09:41:31Z",
-    "searchProvider": "KAKAO"
-  }
-...
+{
+  "ranks": [
+    {
+      "rank": 1,
+      "keyword": "테스트1",
+      "count": 32
+    },
+    {
+      "rank": 2,
+      "keyword": "테스트2",
+      "count": 16
+    },
+    {
+      "rank": 3,
+      "keyword": "테스트3",
+      "count": 8
+    },
+    {
+      "rank": 4,
+      "keyword": "테스트4",
+      "count": 4
+    },
+    {
+      "rank": 5,
+      "keyword": "윤하",
+      "count": 3
+    },
+    {
+      "rank": 6,
+      "keyword": "테스트5",
+      "count": 2
+    },
+    {
+      "rank": 7,
+      "keyword": "테스트6",
+      "count": 1
+    }
+  ]
+}
 ```
 
 
@@ -106,7 +136,7 @@ com.letsbe.blog
 │   ├── search
 │   └── rank
 └── interfaces
-│   ├── search
+    ├── search
     └── rank
 ```
 
@@ -118,7 +148,7 @@ com.letsbe.blog
 
 #### [DOMAIN](https://github.com/letsbe-x/search-blog-service/blob/main/subprojects/domain/build.gradle.kts)
 
-### [Application](https://github.com/letsbe-x/search-blog-service/blob/main/subprojects/applications/build.gradle.kts)
+#### [Application](https://github.com/letsbe-x/search-blog-service/blob/main/subprojects/applications/build.gradle.kts)
 
 #### [Interface](https://github.com/letsbe-x/search-blog-service/blob/main/subprojects/interfaces/build.gradle.kts)
 
@@ -145,7 +175,7 @@ com.letsbe.blog
 
 ### release
 
-[execute-jar][https://github.com/letsbe-x/search-blog-service/blob/main/execute/search-blog-service-0.11-SNAPSHOT.jar]
+[execute-jar](https://github.com/letsbe-x/search-blog-service/blob/main/execute/search-blog-service-0.11-SNAPSHOT.jar)
 
 
 ### 환경변수
